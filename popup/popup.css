@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    width: 800px;
+    height: 600px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+
+body {
+    overflow: scroll;
+}
+
+tr > td:nth-child(1) {
+    max-width: 8rem;
+}
+
+tr > td:nth-child(2) {
+    max-width: 8rem;
+}
+
+tr > td:nth-child(3) {
+    width: 12rem;
+}
