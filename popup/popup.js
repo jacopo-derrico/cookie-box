@@ -1,3 +1,5 @@
+import { getCookiePurpose } from '../cookieDictionary.js';
+
 // Get the active tab and retrieve its cookies
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const activeTab = tabs[0];
@@ -29,7 +31,7 @@ function displayCookies(cookies) {
 
         cell1.innerHTML = cookie.name;
         cell2.innerHTML = cookie.value;
-        cell3.innerHTML = 'N/A';
+        cell3.innerHTML = getCookiePurpose(cookie.name);
 
         cell2.className = 'text-truncate';
     });
