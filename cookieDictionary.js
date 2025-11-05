@@ -521,7 +521,7 @@ function getCookiePurpose(cookieName) {
     const cookieTokens = cookieName.split(/[^a-zA-Z0-9]+/).filter(Boolean);
     const significantTokens = cookieTokens.filter((token) => {
         const containsLetters = /[a-zA-Z]/.test(token);
-        const minimumLength = token.length >= 3;
+        const minimumLength = token.length >= 2;
         return containsLetters && minimumLength;
     });
 
