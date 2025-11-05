@@ -1,6 +1,6 @@
 {
     "name": "CookieBox",
-    "description": "An extension that let you check which cookie are used and, if possible for what purpouse.",
+    "description": "Check how many cookies a website uses, their expiration date and what they do. Take control of what is stored on your device.",
     "version": "1.0",
     "manifest_version": 3,
     "icons": {
