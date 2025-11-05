@@ -7,6 +7,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     // Get cookies for the active tab
     chrome.cookies.getAll({ url: activeTab.url }, (cookies) => {
         displayCookies(cookies);
+        console.log(cookies);
+
+        // show number of cookies found
+        const cookieCount = document.getElementById('cookie-number');
+        cookieCount.innerHTML = cookies.length;
     });
 });
 
@@ -25,6 +30,7 @@ function displayCookies(cookies) {
         const cell1 = row.insertCell(0);
         const cell2 = row.insertCell(1);
         const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
 
         const purpose = getCookiePurpose(cookie.name);
 
@@ -41,6 +47,20 @@ function displayCookies(cookies) {
             </a>` + cookie.name;
         cell2.innerHTML = cookie.value;
         cell3.innerHTML = purpose[0];
+
+        if (cookie.expirationDate || cookie.session === false){
+            const expirationDate = new Date(cookie.expirationDate * 1000);
+            let days = Math.round((expirationDate - new Date()) / (1000 * 60 * 60 * 24));
+            if (days === 0) {
+                days = 'Less then a day';
+            } else {
+                days = days.toLocaleString() + ' days';
+            }
+            cell4.innerHTML = days; 
+        } else {
+            const days = 'This session only';
+            cell4.innerHTML = days; 
+        }
 
         cell2.className = 'text-truncate';
     });
