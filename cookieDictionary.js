@@ -152,6 +152,10 @@ const cookieDictionary = {
     'gaid': 'Advertising - Google Ad ID',
     'aaid': 'Advertising - Amazon Ad ID',
 
+    // WordPress Ad Plugins
+    'advanced_ads_': 'Advanced Ads (WordPress) - Ad management and placement',
+    'advanced_ads': 'Advanced Ads (WordPress) - Ad management and placement',
+
     // Content Delivery Networks (CDN)
     '__cfruid': 'Cloudflare - Request ID',
     '__cf_bm': 'Cloudflare - Bot Management',
@@ -491,20 +495,49 @@ const cookieDictionary = {
 
 // Function to get cookie possible purpose
 function getCookiePurpose(cookieName) {
-    // Same name
-    if (cookieDictionary[cookieName]) {
-        return cookieDictionary[cookieName];
+    // exact match
+    const exactPurpose = cookieDictionary[cookieName];
+    if (exactPurpose) {
+        const exactPartial = cookieName;
+        return [exactPurpose, exactPartial];
     }
 
-    // Partial name for pattern-based cookies (e.g., _ga_12345678)
+    // prefix match - find the longest matching key
+    let bestKey = '';
+    let bestPurpose = '';
     for (const [key, value] of Object.entries(cookieDictionary)) {
-        if (cookieName.startsWith(key)) {
-            return value;
+        
+        const isLonger = key.length > bestKey.length;
+        if (cookieName.startsWith(key) && isLonger) {
+            bestKey = key;
+            bestPurpose = value;
         }
     }
+    if (bestKey) {
+        return [bestPurpose, bestKey];
+    }
 
-    // Default
-    return 'Unknown - Purpose not identified';
+    // no match found - deduce partial to look up online
+    const cookieTokens = cookieName.split(/[^a-zA-Z0-9]+/).filter(Boolean);
+    const significantTokens = cookieTokens.filter((token) => {
+        const containsLetters = /[a-zA-Z]/.test(token);
+        const minimumLength = token.length >= 3;
+        return containsLetters && minimumLength;
+    });
+
+    let derivedPartial = '';
+    if (significantTokens.length >= 2) {
+        derivedPartial = `${significantTokens[0]} ${significantTokens[1]}`;
+    } else if (significantTokens.length === 1) {
+        derivedPartial = significantTokens[0];
+    } else if (cookieTokens.length >= 1) {
+        derivedPartial = cookieTokens[0];
+    } else {
+        derivedPartial = '';
+    }
+
+    const unknownPurpose = 'Unknown - Purpose not identified';
+    return [unknownPurpose, derivedPartial];
 }
 
 export { getCookiePurpose };
